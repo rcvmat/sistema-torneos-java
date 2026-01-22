@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enums.EstadoInscripcion;
+import informes.DatosInformeSocio;
+import informes.SociosActivosPorTorneo;
 import modelo.Inscripcion;
 import modelo.Socio;
 import modelo.Torneo;
@@ -65,6 +67,24 @@ public class ServicioTorneo {
 			}
 		}
 		return false;
+	}
+
+	public SociosActivosPorTorneo obtenerSociosActivos(String nombreTorneo) {
+		Torneo torneo = buscarTorneo(nombreTorneo);
+		if (torneo == null) {
+			return null;
+		}
+
+		SociosActivosPorTorneo informe = new SociosActivosPorTorneo(torneo.getNombre());
+
+		for (Inscripcion inscripcion : torneo.getInscripciones()) {
+			if (inscripcion.getEstado() == EstadoInscripcion.ACTIVA) {
+				Socio socio = inscripcion.getSocio();
+				informe.agregarSocio(new DatosInformeSocio(socio.getNumero(), socio.getNombre(), torneo.getNombre()));
+			}
+		}
+
+		return informe;
 	}
 
 }
